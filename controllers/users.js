@@ -23,7 +23,7 @@ module.exports.getUser = (req, res) => {
 
 module.exports.updateSelfUser = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user.id, { name, about, avatar }, {
+  User.findByIdAndUpdate(req.user.id, { name, about }, {
       new: true,
       runValidators: true,
       upsert: false
