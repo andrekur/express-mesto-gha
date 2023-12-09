@@ -21,7 +21,7 @@ module.exports.getCards = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   getObjOrError(Card, req.params.cardId)
-    .then((obj) => {
+    .then(() => {
       Card.findByIdAndDelete(req.params.cardId)
         .then(() => res.status(HTTP_STATUS_OK).send({}))
         .catch(err => APIError(req, res, err))
@@ -31,8 +31,7 @@ module.exports.deleteCard = (req, res) => {
 
 module.exports.likeCard = (req, res) => {
   getObjOrError(Card, req.params.cardId)
-    .then((obj) => {
-      console.log(obj)
+    .then(() => {
       Card.findByIdAndUpdate(
         req.params.cardId,
         { $addToSet: { likes: req.user._id } },
@@ -48,7 +47,7 @@ module.exports.likeCard = (req, res) => {
 
 module.exports.dislikeCard = (req, res) => {
   getObjOrError(Card, req.params.cardId)
-    .then((obj) => {
+    .then(() => {
       Card.findByIdAndUpdate(
         req.params.cardId,
         { $pull: { likes: req.user._id } },
