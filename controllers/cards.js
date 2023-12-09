@@ -1,24 +1,36 @@
 const Card = require('../models/card');
-const { HTTP_STATUS_BAD_REQUEST  } = require('http2').constants;
+const { HTTP_STATUS_NO_CONTENT  } = require('http2').constants;
 const { APIError } = require('../errors/APIError')
+const { getObjOrError } = require('../utils/utils')
+const mongoose = require('mongoose');
+
 
 module.exports.createCard = (req, res) => {
   const { link, name } = req.body;
-  Card.create({ link, name })
+  Card.findOneAndUpdate(new mongoose.Types.ObjectId(),
+    { link, name, owner: req.user._id },
+    {
+      new: true,
+      upsert: true,
+      runValidators: true,
+      setDefaultsOnInsert: true,
+      populate: 'owner'
+    })
     .then(card => res.send(card))
     .catch(err => APIError(req, res, err))
 }
 
 module.exports.getCards = (req, res) => {
   Card.find({})
+    .populate('owner')
     .then(cards => res.send(cards))
-    .catch(err => res.status(500).send({message: err.message}))
+    .catch(err => APIError(req, res, err))
 }
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndDelete(req.params.cardId)
-    .then(res.send({'status': 204}))
-    .catch(err => res.status(500).send({message: err.message}))
+    .then(res.status(HTTP_STATUS_NO_CONTENT).send())
+    .catch(err => APIError(req, res, err))
 }
 
 module.exports.likeCard = (req, res) => {
