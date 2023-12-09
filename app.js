@@ -1,4 +1,3 @@
-const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -20,6 +19,4 @@ app.use((req, res, next) => {
 
 app.use('/users', require('./routes/users'))
 
-app.listen(PORT, () => {
-  console.log('WORK');
-});
+app.listen(PORT, () => {});

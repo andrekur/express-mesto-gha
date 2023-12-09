@@ -1,10 +1,12 @@
 const Card = require('../models/card');
+const { HTTP_STATUS_BAD_REQUEST  } = require('http2').constants;
+const { APIError } = require('../errors/APIError')
 
 module.exports.createCard = (req, res) => {
   const { link, name } = req.body;
   Card.create({ link, name })
     .then(card => res.send(card))
-    .catch(err => res.status(500).send({message: err.message}))
+    .catch(err => APIError(req, res, err))
 }
 
 module.exports.getCards = (req, res) => {

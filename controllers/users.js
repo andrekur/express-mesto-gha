@@ -1,22 +1,23 @@
 const User = require('../models/user')
+const { APIError } = require('../errors/APIError')
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then(user => res.send(user))
-    .catch(err => res.status(500).send({message: err.message}))
+    .catch(err => APIError(req, res, err))
 }
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then(users => res.send({data: users}))
-    .catch(err => res.status(500).send({message: err.message}))
+    .catch(err => APIError(req, res, err))
 }
 
 module.exports.getUser = (req, res) => {
   User.find({_id: req.params.id})
     .then(user => res.send({data: user }))
-    .catch(err => res.status(500).send({message: err.message}))
+    .catch(err => APIError(req, res, err))
 }
 
 module.exports.updateSelfUser = (req, res) => {
@@ -27,7 +28,7 @@ module.exports.updateSelfUser = (req, res) => {
       upsert: false
     })
     .then(user => res.send({data: user}))
-    .catch(err => res.status(500).send({message: err.message}))
+    .catch(err => APIError(req, res, err))
 }
 
 module.exports.updateSelfAvatar = (req, res) => {
@@ -38,5 +39,5 @@ module.exports.updateSelfAvatar = (req, res) => {
       upsert: false
     })
     .then(user => res.send({data: user}))
-    .catch(err => res.status(500).send({message: err.message}))
+    .catch(err => APIError(req, res, err))
 }
