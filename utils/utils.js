@@ -8,7 +8,9 @@ module.exports.getObjOrError = (model, _id) => {
           reject(new ObjNotFoundError(`Object with _id ${_id} not found`))
         }
 
+
       resolve(obj);
     })
+    .catch(reject)
   })
 };

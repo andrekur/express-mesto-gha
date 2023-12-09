@@ -1,7 +1,6 @@
 const { HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_NOT_FOUND } = require('http2').constants;
 
 module.exports.APIError = (req, res, err) => {
-  console.log('name', err.name, ObjNotFoundError.name)
   if (err.name === 'ValidationError' || err.name === 'CastError') {
     return res.status(HTTP_STATUS_BAD_REQUEST).send({message: err.message})
   }
