@@ -23,7 +23,7 @@ module.exports.getUser = (req, res) => {
 
 module.exports.updateSelfUser = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user.id, { name, about }, {
+  User.findByIdAndUpdate(req.user._id, { name, about }, {
       new: true,
       runValidators: true,
       upsert: false
@@ -34,7 +34,7 @@ module.exports.updateSelfUser = (req, res) => {
 
 module.exports.updateSelfAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user.id, { avatar }, {
+  User.findByIdAndUpdate(req.user._id, { avatar }, {
       new: true,
       runValidators: true,
       upsert: false
