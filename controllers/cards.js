@@ -26,13 +26,18 @@ module.exports.deleteCard = (req, res) => {
 }
 
 module.exports.likeCard = (req, res) => {
-    Card.findByIdAndUpdate(
-      req.params.cardId,
-      { $addToSet: { likes: req.user._id } },
-      { new: true },
-    )
+  getObjOrError(Card, req.params.cardId)
+    .catch(err => APIError(req, res, err))
+
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true },
+  )
+    .then(card => card.populate('likes'))
+    .then(card => card.populate('owner'))
     .then(card => res.send(card))
-    .catch(err => res.status(500).send({message: err.message}))
+    .catch(err => APIError(req, res, err))
 }
 
 module.exports.dislikeCard = (req, res) => {
@@ -41,4 +46,8 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+  .then(card => card.populate('likes'))
+  .then(card => card.populate('owner'))
+  .then(card => res.send(card))
+  .catch(err => APIError(req, res, err))
 }
