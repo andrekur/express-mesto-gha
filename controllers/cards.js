@@ -27,27 +27,33 @@ module.exports.deleteCard = (req, res) => {
 
 module.exports.likeCard = (req, res) => {
   getObjOrError(Card, req.params.cardId)
-    .catch(err => APIError(req, res, err))
-
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-  )
-    .then(card => card.populate('likes'))
-    .then(card => card.populate('owner'))
-    .then(card => res.send(card))
+    .then((obj) => {
+      console.log(obj)
+      Card.findByIdAndUpdate(
+        req.params.cardId,
+        { $addToSet: { likes: req.user._id } },
+        { new: true },
+      )
+        .then(card => card.populate('likes'))
+        .then(card => card.populate('owner'))
+        .then(card => res.send(card))
+        .catch(err => APIError(req, res, err))
+    })
     .catch(err => APIError(req, res, err))
 }
 
 module.exports.dislikeCard = (req, res) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true },
-  )
-  .then(card => card.populate('likes'))
-  .then(card => card.populate('owner'))
-  .then(card => res.send(card))
-  .catch(err => APIError(req, res, err))
+  getObjOrError(Card, req.params.cardId)
+    .then((obj) => {
+      Card.findByIdAndUpdate(
+        req.params.cardId,
+        { $pull: { likes: req.user._id } },
+        { new: true },
+      )
+        .then(card => card.populate('likes'))
+        .then(card => card.populate('owner'))
+        .then(card => res.send(card))
+        .catch(err => APIError(req, res, err))
+    })
+    .catch(err => APIError(req, res, err))
 }
