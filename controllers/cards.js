@@ -2,20 +2,12 @@ const Card = require('../models/card');
 const { HTTP_STATUS_NO_CONTENT  } = require('http2').constants;
 const { APIError } = require('../errors/APIError')
 const { getObjOrError } = require('../utils/utils')
-const mongoose = require('mongoose');
 
 
 module.exports.createCard = (req, res) => {
   const { link, name } = req.body;
-  Card.findOneAndUpdate(new mongoose.Types.ObjectId(),
-    { link, name, owner: req.user._id },
-    {
-      new: true,
-      upsert: true,
-      runValidators: true,
-      setDefaultsOnInsert: true,
-      populate: 'owner'
-    })
+  Card.create({ link, name, owner: req.user._id })
+    .then(card => card.populate('owner'))
     .then(card => res.send(card))
     .catch(err => APIError(req, res, err))
 }
