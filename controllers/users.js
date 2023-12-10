@@ -16,7 +16,7 @@ module.exports.getUsers = (req, res) => {
 }
 
 module.exports.getUser = (req, res) => {
-  getObjOrError(User, req.params.userId)
+  User.findById(req.params.userId).orFail()
     .then(user => res.send(user))
     .catch(err => APIError(req, res, err))
 }
@@ -26,8 +26,7 @@ module.exports.updateSelfUser = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { name, about }, {
       new: true,
       runValidators: true,
-      upsert: false
-    })
+    }).orFail()
     .then(user => res.send({data: user}))
     .catch(err => APIError(req, res, err))
 }
@@ -37,8 +36,7 @@ module.exports.updateSelfAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, {
       new: true,
       runValidators: true,
-      upsert: false
-    })
+    }).orFail()
     .then(user => res.send(user))
     .catch(err => APIError(req, res, err))
 }
