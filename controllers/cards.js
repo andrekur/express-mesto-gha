@@ -37,8 +37,7 @@ module.exports.likeCard = (req, res) => {
         { $addToSet: { likes: req.user._id } },
         { new: true },
       )
-        .then(card => card.populate('likes'))
-        .then(card => card.populate('owner'))
+        .then(card => card.populate(['likes', 'owner']))
         .then(card => res.send(card))
         .catch(err => APIError(req, res, err))
     })
@@ -53,8 +52,7 @@ module.exports.dislikeCard = (req, res) => {
         { $pull: { likes: req.user._id } },
         { new: true },
       )
-        .then(card => card.populate('likes'))
-        .then(card => card.populate('owner'))
+        .then(card => card.populate(['likes', 'owner']))
         .then(card => res.send(card))
         .catch(err => APIError(req, res, err))
     })

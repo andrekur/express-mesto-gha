@@ -1,4 +1,4 @@
-const { HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_NOT_FOUND } = require('http2').constants;
+const { HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_NOT_FOUND,  } = require('http2').constants;
 
 module.exports.APIError = (req, res, err) => {
   if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -8,7 +8,7 @@ module.exports.APIError = (req, res, err) => {
     return res.status(err.statusCode).send({message: err.message})
   }
 
-  return res.status(500).send({message: 'Мы уже чиним:)'})
+  return res.status(HTTP_STATUS_NOT_FOUND).send({message: 'Мы уже чиним:)'})
 };
 
 class ObjNotFoundError extends Error {
