@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { HTTP_STATUS_NOT_FOUND  } = require('http2').constants;
 
 
 const { PORT = 3000 } = process.env;
@@ -18,11 +17,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/users', require('./routes/users'))
-app.use('/cards', require('./routes/cards'))
-
-app.use(function(req, res, next) {
-  res.status(HTTP_STATUS_NOT_FOUND).send({message: 'URL not found'})
-});
+app.use('/', require('./routes'))
 
 app.listen(PORT, () => {});
