@@ -1,6 +1,5 @@
 const User = require('../models/user')
 const { APIError } = require('../errors/APIError')
-const { getObjOrError } = require('../utils/utils')
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;

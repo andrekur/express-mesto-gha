@@ -1,7 +1,6 @@
 const Card = require('../models/card');
 const { HTTP_STATUS_OK  } = require('http2').constants;
 const { APIError } = require('../errors/APIError')
-const { getObjOrError } = require('../utils/utils')
 
 
 module.exports.createCard = (req, res) => {
