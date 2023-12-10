@@ -22,20 +22,21 @@ module.exports.getUser = (req, res) => {
 
 module.exports.updateSelfUser = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, {
-      new: true,
-      runValidators: true,
-    }).orFail()
-    .then(user => res.send({data: user}))
+  updateUserData(req.user._id, {name, about})
+    .then(user => res.send(user))
     .catch(err => APIError(req, res, err))
 }
 
 module.exports.updateSelfAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, {
-      new: true,
-      runValidators: true,
-    }).orFail()
+  updateUserData(req.user._id, {avatar})
     .then(user => res.send(user))
     .catch(err => APIError(req, res, err))
+}
+
+const updateUserData = (userId, updateData) => {
+  return User.findByIdAndUpdate(userId, updateData, {
+    new: true,
+    runValidators: true,
+  }).orFail()
 }

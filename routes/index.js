@@ -4,7 +4,7 @@ const { HTTP_STATUS_NOT_FOUND  } = require('http2').constants;
 router.use('/cards', require('./cards'))
 router.use('/users', require('./users'))
 
-router.use('*', function(req, res, next) {
+router.use('*', function(req, res) {
   res.status(HTTP_STATUS_NOT_FOUND).send({message: 'URL not found'})
 });
 

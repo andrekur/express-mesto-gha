@@ -2,6 +2,7 @@ const { HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_NOT_FOUND, HTTP_STATUS_INTERNAL_SER
 const { ValidationError, CastError, DocumentNotFoundError } = require('mongoose').Error;
 
 module.exports.APIError = (req, res, err) => {
+  console.log(err)
   if (err instanceof ValidationError  || err instanceof CastError) {
     return res.status(HTTP_STATUS_BAD_REQUEST).send({message: err.message})
   }
