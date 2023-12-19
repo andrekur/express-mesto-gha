@@ -24,6 +24,7 @@ module.exports.deleteCard = (req, res) => {
     .catch(err => APIError(req, res, err))
 }
 
+// TODO вынести общий компонент
 module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
