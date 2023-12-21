@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose')
 const isEmail = require('validator/lib/isEmail');
 const isUrl = require('validator/lib/isURL')
@@ -35,7 +36,7 @@ const userSchema = new mongoose.Schema({
       message: 'Неправильный формат почты',
     }
   },
-  passwod: {
+  password: {
     type: String,
     required: true,
     minlength: 8,

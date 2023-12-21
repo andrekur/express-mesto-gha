@@ -13,7 +13,7 @@ const extractBearerToken = (header) => {
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
-
+  console.log(authorization)
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return handleAuthError(res);
   }
@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'super-strong-secret');
+    payload = jwt.verify(token, 'TEST_TOKEN');
   } catch (err) {
     return handleAuthError(res);
   }
