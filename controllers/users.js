@@ -17,6 +17,16 @@ module.exports.getUser = (req, res) => {
     .catch(err => APIError(req, res, err))
 }
 
+module.exports.getSeltUser = (req, res) => {
+  User.findById(req.user._id).orFail()
+    .then(user => res.send({
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+      about: user.about,
+      link: user.avatar
+    }))
+}
 module.exports.updateSelfUser = (req, res) => {
   const { name, about } = req.body;
   updateUserData(req.user._id, {name, about})
@@ -51,6 +61,9 @@ module.exports.createUser = (req, res) => {
       res.status(HTTP_STATUS_CREATED).send({
         _id: user._id,
         email: user.email,
+        name: user.name,
+        about: user.about,
+        link: user.link,
       });
     })
     // TODO add global err
