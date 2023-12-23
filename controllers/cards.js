@@ -21,14 +21,14 @@ module.exports.getCards = (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   Card.findById({_id: req.params.cardId}).orFail()
     .then((card) => {
-      console.log(card.owner.toString() === req.user._id)
       if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenRequestError('Отказано в доступе')
       }
 
-      card.deleteOne()
+      Card.findByIdAndDelete(req.params.cardId).orFail()
+        .then(() => res.status(HTTP_STATUS_OK).send({}))
+        .catch(next)
     })
-    .then(() => res.status(HTTP_STATUS_OK).send({}))
     .catch(next)
 }
 

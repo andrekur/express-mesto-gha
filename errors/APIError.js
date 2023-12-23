@@ -3,7 +3,7 @@ const { ValidationError, CastError, DocumentNotFoundError } = require('mongoose'
 const { UnauthorizedError, ConflictReqiestError, ForbiddenRequestError } = require('./errors')
 
 module.exports.APIError = (req, res, err, next) => {
-  console.log(err)
+
   if (err instanceof ValidationError  || err instanceof CastError) {
     return res.status(HTTP_STATUS_BAD_REQUEST).send({message: err.message})
   }
