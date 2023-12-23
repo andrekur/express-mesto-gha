@@ -1,5 +1,6 @@
 const Card = require('../models/card');
 const { HTTP_STATUS_OK  } = require('http2').constants;
+const { ForbiddenRequestError } = require('../errors/errors')
 
 
 module.exports.createCard = (req, res, next) => {
@@ -18,7 +19,15 @@ module.exports.getCards = (req, res, next) => {
 }
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndDelete(req.params.cardId).orFail()
+  Card.findById({_id: req.params.cardId}).orFail()
+    .then((card) => {
+      console.log(card.owner.toString() === req.user._id)
+      if (card.owner.toString() !== req.user._id) {
+        throw new ForbiddenRequestError('Отказано в доступе')
+      }
+
+      card.deleteOne()
+    })
     .then(() => res.status(HTTP_STATUS_OK).send({}))
     .catch(next)
 }

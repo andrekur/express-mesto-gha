@@ -5,13 +5,6 @@ class UnauthorizedError extends Error {
   }
 }
 
-class BadRequestError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 400
-  }
-}
-
 class ConflictReqiestError extends Error {
   constructor(message) {
     super(message);
@@ -19,6 +12,13 @@ class ConflictReqiestError extends Error {
   }
 }
 
+class ForbiddenRequestError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 403
+  }
+}
+
 module.exports.UnauthorizedError = UnauthorizedError;
-module.exports.BadRequestError = BadRequestError;
 module.exports.ConflictReqiestError = ConflictReqiestError;
+module.exports.ForbiddenRequestError = ForbiddenRequestError;
