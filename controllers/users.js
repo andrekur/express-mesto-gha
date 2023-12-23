@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { UnauthorizedError, BadRequestError } = require('../errors/errors')
+const { UnauthorizedError, ConflictReqiestError } = require('../errors/errors')
 const User = require('../models/user')
 const {HTTP_STATUS_CREATED} = require('http2').constants
 
@@ -24,7 +24,7 @@ module.exports.getSeltUser = (req, res, next) => {
       email: user.email,
       name: user.name,
       about: user.about,
-      link: user.avatar
+      avatar: user.avatar
     }))
     .catch(next)
 }
@@ -53,7 +53,7 @@ module.exports.createUser = (req, res, next) => {
   User.findOne({email: req.body.email})
     .then((user) => {
       if (user) {
-        throw new BadRequestError('Пользователь с такой почтой уже существует, необходимо указать другую');
+        throw new ConflictReqiestError('Пользователь с такой почтой уже существует, необходимо указать другую');
       }
 
       bcrypt.hash(req.body.password, 10)
@@ -62,7 +62,7 @@ module.exports.createUser = (req, res, next) => {
           password: hash,
           name: req.body.name,
           about: req.body.about,
-          link: req.body.link,
+          avatar: req.body.avatar,
         }))
         .then((user) => {
           res.status(HTTP_STATUS_CREATED).send({
@@ -70,7 +70,7 @@ module.exports.createUser = (req, res, next) => {
             email: user.email,
             name: user.name,
             about: user.about,
-            link: user.avatar,
+            avatar: user.avatar,
           });
         })
         .catch(next)

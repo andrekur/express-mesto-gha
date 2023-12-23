@@ -12,5 +12,13 @@ class BadRequestError extends Error {
   }
 }
 
+class ConflictReqiestError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 409
+  }
+}
+
 module.exports.UnauthorizedError = UnauthorizedError;
 module.exports.BadRequestError = BadRequestError;
+module.exports.ConflictReqiestError = ConflictReqiestError;
