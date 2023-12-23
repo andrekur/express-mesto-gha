@@ -25,7 +25,7 @@ module.exports.deleteCard = (req, res, next) => {
         throw new ForbiddenRequestError('Отказано в доступе')
       }
 
-      Card.findByIdAndDelete(req.params.cardId).orFail()
+      Card.deleteOne()
         .then(() => res.status(HTTP_STATUS_OK).send({}))
         .catch(next)
     })
