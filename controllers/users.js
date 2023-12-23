@@ -1,23 +1,23 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const { UnauthorizedError, BadRequestError } = require('../errors/errors')
 const User = require('../models/user')
-const { APIError } = require('../errors/APIError')
 const {HTTP_STATUS_CREATED} = require('http2').constants
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then(users => res.send({data: users}))
-    .catch(err => APIError(req, res, err))
+    .catch(next)
 }
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId).orFail()
     .then(user => res.send(user))
-    .catch(err => APIError(req, res, err))
+    .catch(next)
 }
 
-module.exports.getSeltUser = (req, res) => {
+module.exports.getSeltUser = (req, res, next) => {
   User.findById(req.user._id).orFail()
     .then(user => res.send({
       _id: user._id,
@@ -26,19 +26,20 @@ module.exports.getSeltUser = (req, res) => {
       about: user.about,
       link: user.avatar
     }))
+    .catch(next)
 }
-module.exports.updateSelfUser = (req, res) => {
+module.exports.updateSelfUser = (req, res, next) => {
   const { name, about } = req.body;
   updateUserData(req.user._id, {name, about})
     .then(user => res.send(user))
-    .catch(err => APIError(req, res, err))
+    .catch(next)
 }
 
-module.exports.updateSelfAvatar = (req, res) => {
+module.exports.updateSelfAvatar = (req, res, next) => {
   const { avatar } = req.body;
   updateUserData(req.user._id, {avatar})
     .then(user => res.send(user))
-    .catch(err => APIError(req, res, err))
+    .catch(next)
 }
 
 const updateUserData = (userId, updateData) => {
@@ -48,31 +49,36 @@ const updateUserData = (userId, updateData) => {
   }).orFail()
 }
 
-module.exports.createUser = (req, res) => {
-  bcrypt.hash(req.body.password, 10)
-    .then((hash) => User.create({
-      email: req.body.email,
-      password: hash,
-      name: req.body.name,
-      about: req.body.about,
-      link: req.body.link,
-    }))
+module.exports.createUser = (req, res, next) => {
+  User.findOne({email: req.body.email})
     .then((user) => {
-      res.status(HTTP_STATUS_CREATED).send({
-        _id: user._id,
-        email: user.email,
-        name: user.name,
-        about: user.about,
-        link: user.link,
-      });
+      if (user) {
+        throw new BadRequestError('Пользователь с такой почтой уже существует, необходимо указать другую');
+      }
+
+      bcrypt.hash(req.body.password, 10)
+        .then((hash) => User.create({
+          email: req.body.email,
+          password: hash,
+          name: req.body.name,
+          about: req.body.about,
+          link: req.body.link,
+        }))
+        .then((user) => {
+          res.status(HTTP_STATUS_CREATED).send({
+            _id: user._id,
+            email: user.email,
+            name: user.name,
+            about: user.about,
+            link: user.avatar,
+          });
+        })
+        .catch(next)
     })
-    // TODO add global err
-    .catch((err) => {
-      res.status(400).send(err);
-    });
+    .catch(next)
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -81,7 +87,5 @@ module.exports.login = (req, res) => {
         token: jwt.sign({ _id: user._id }, 'TEST_TOKEN', { expiresIn: '7d' }),
       });
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
+    .catch((err) => next(new UnauthorizedError(err)))
 };
