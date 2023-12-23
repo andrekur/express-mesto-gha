@@ -3,7 +3,7 @@ const { celebrate, Joi } = require('celebrate');
 const { createCard, getCards, likeCard, dislikeCard, deleteCard } = require('../controllers/cards');
 
 const cardIdValidator = celebrate({
-  query: Joi.object().keys({
+  params: Joi.object().keys({
     cardId: Joi.string().required().hex().length(24)
   })
 })
