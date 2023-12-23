@@ -12,7 +12,7 @@ router.patch('/me', celebrate({
 }), updateSelfUser);
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    link: Joi.string().required().pattern(/^(http|https?:\/\/)?(www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+([/?].*)?$/)
+    avatar: Joi.string().required().pattern(/^(http|https?:\/\/)?(www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+([/?].*)?$/)
   })
 }), updateSelfAvatar);
 
