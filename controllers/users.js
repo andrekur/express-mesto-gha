@@ -43,6 +43,9 @@ module.exports.createUser = (req, res) => {
     .then((hash) => User.create({
       email: req.body.email,
       password: hash,
+      name: req.body.name,
+      about: req.body.about,
+      link: req.body.link,
     }))
     .then((user) => {
       res.status(HTTP_STATUS_CREATED).send({
