@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { SECRET_KEY } = require('../settings')
+const { SECRET_KEY } = require('../config').config
 const { UnauthorizedError, ConflictReqiestError } = require('../errors/errors')
 const User = require('../models/user')
 const { HTTP_STATUS_CREATED } = require('http2').constants

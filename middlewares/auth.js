@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { SECRET_KEY } = require('../settings')
-
+const { SECRET_KEY } = require('../config').config
 
 const { UnauthorizedError } = require('../errors/errors')
 

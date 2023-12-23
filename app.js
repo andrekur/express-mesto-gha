@@ -4,12 +4,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 
-const { PORT } = require('./settings')
+const { PORT, DB_HOST, DB_PORT, DB_NAME } = require('./config').config
 const { APIError } = require('./errors/APIError')
 
 const app = express();
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
+mongoose.connect(`mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
