@@ -9,7 +9,7 @@ module.exports.APIError = (req, res, err, next) => {
   else if (err instanceof DocumentNotFoundError) {
     return res.status(HTTP_STATUS_NOT_FOUND).send({message: err.message})
   }
-  else if (err instanceof UnauthorizedError || err instanceof BadRequestError ) {
+  else if (err instanceof UnauthorizedError || err instanceof BadRequestError || err instanceof ConflictReqiestError) {
     return res.status(err.statusCode).send({message: err.message})
   }
 
