@@ -1,6 +1,6 @@
 const { HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_NOT_FOUND, HTTP_STATUS_INTERNAL_SERVER_ERROR } = require('http2').constants;
 const { ValidationError, CastError, DocumentNotFoundError } = require('mongoose').Error;
-const { UnauthorizedError, BadRequestError } = require('./errors')
+const { UnauthorizedError, BadRequestError, ConflictReqiestError } = require('./errors')
 
 module.exports.APIError = (req, res, err, next) => {
   if (err instanceof ValidationError  || err instanceof CastError) {
