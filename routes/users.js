@@ -2,12 +2,6 @@ const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const { getUsers, getUser, getSeltUser, updateSelfUser, updateSelfAvatar } = require('../controllers/users')
 
-const userIdValidator = celebrate({
-  query: Joi.object().keys({
-    userId: Joi.string().required().hex().length(24)
-  })
-})
-
 router.get('/', getUsers);
 router.patch('/me', celebrate({
   body: Joi.object().keys({
@@ -21,6 +15,6 @@ router.patch('/me/avatar', celebrate({
     avatar: Joi.string().required().pattern(/^(http|https?:\/\/)?(www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+([/?].*)?$/)
   })
 }), updateSelfAvatar);
-router.get('/:userId', userIdValidator, getUser);
+router.get('/:userId', getUser);
 
 module.exports = router;
